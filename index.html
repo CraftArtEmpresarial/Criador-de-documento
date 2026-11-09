@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#08131b">
+  <title>Craft Art | Gerador de contratos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">CA</span><span><b>CRAFT ART</b><small>DOCUMENTOS & CONTRATOS</small></span></a>
+    <div class="top-status"><span class="status-dot"></span> Área administrativa</div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow"><span></span> CENTRAL DE DOCUMENTOS</div>
+      <h1>Crie contratos com<br><span>clareza e confiança.</span></h1>
+      <p>Preencha os dados, personalize as condições e gere um PDF pronto para revisar e encaminhar ao cliente.</p>
+      <div class="hero-tags"><span><i>✦</i> PDF personalizado</span><span><i>✦</i> Envio direcionado</span><span><i>✦</i> Confirmação organizada</span></div>
+    </section>
+
+    <div class="workspace">
+      <section class="form-panel panel">
+        <div class="panel-heading"><div><span class="step">01</span><h2>Dados do contrato</h2><p>Os campos com * são obrigatórios.</p></div><span class="lock-icon">⌑</span></div>
+        <form id="contractForm">
+          <div class="section-label">DADOS DO CLIENTE</div>
+          <label>Nome completo do cliente <em>*</em><input id="clientName" required placeholder="Nome e sobrenome" autocomplete="name"></label>
+          <div class="two-cols">
+            <label>CPF <em>*</em><input id="cpf" required inputmode="numeric" maxlength="14" placeholder="000.000.000-00"></label>
+            <label>Idade <em>*</em><input id="age" required type="number" min="1" max="120" placeholder="Ex.: 25"></label>
+          </div>
+          <label>WhatsApp do cliente <em>*</em><div class="phone-wrap"><span>🇧🇷 +55</span><input id="phone" required inputmode="tel" placeholder="(19) 99999-9999"></div><small class="hint">O WhatsApp será aberto exatamente para este número.</small></label>
+          <div class="section-label spaced">INFORMAÇÕES DO SERVIÇO</div>
+          <label>Serviço contratado <em>*</em><input id="service" required placeholder="Ex.: criação de site institucional"></label>
+          <label>Descrição e entregáveis <textarea id="description" rows="3" placeholder="Descreva o que será desenvolvido e entregue..."></textarea></label>
+          <div class="two-cols">
+            <label>Valor inicial (R$) <em>*</em><input id="price" required inputmode="decimal" placeholder="550,00"></label>
+            <label>Forma de pagamento<input id="payment" placeholder="Ex.: Pix, à vista"></label>
+          </div>
+          <div class="two-cols">
+            <label>Prazo de entrega<input id="deadline" placeholder="Ex.: 15 dias úteis"></label>
+            <label>Validade da proposta<input id="validity" placeholder="Ex.: 7 dias"></label>
+          </div>
+
+          <div class="custom-head"><div><div class="section-label">DADOS ADICIONAIS OPCIONAIS</div><small>Adicione somente as informações necessárias.</small></div><button class="add-btn" type="button" id="addField" aria-label="Adicionar campo">＋</button></div>
+          <div id="customFields" class="custom-fields"></div>
+
+          <div class="section-label spaced">DADOS DA CRAFT ART</div>
+          <label>Nome do responsável<input id="owner" placeholder="Nome de quem representa a Craft Art"></label>
+          <div class="two-cols">
+            <label>CPF/CNPJ da empresa<input id="companyDoc" placeholder="Opcional"></label>
+            <label>Contato da empresa<input id="companyPhone" placeholder="WhatsApp ou telefone"></label>
+          </div>
+          <label>Endereço da empresa<input id="companyAddress" placeholder="Cidade, estado ou endereço comercial"></label>
+          <label>E-mail da empresa<input id="companyEmail" type="email" placeholder="contato@exemplo.com"></label>
+          <div class="notice"><span>ⓘ</span><p>Não adicione números de cartão, códigos de segurança, senhas ou dados bancários nos campos opcionais.</p></div>
+          <button class="primary-btn" type="submit"><span>Gerar contrato em PDF</span><b>↗</b></button>
+          <p class="form-foot">Você poderá revisar o documento antes de abrir o WhatsApp.</p>
+        </form>
+      </section>
+
+      <aside class="side-column">
+        <section class="panel preview-panel">
+          <div class="panel-heading"><div><span class="step">02</span><h2>Prévia do documento</h2><p>O PDF aparecerá aqui depois de gerado.</p></div></div>
+          <div id="emptyState" class="empty-state"><div class="paper-icon"><span></span><span></span><span></span></div><b>Seu contrato começa aqui</b><p>Preencha os dados ao lado e clique em “Gerar contrato em PDF”.</p></div>
+          <div id="pdfState" class="pdf-state hidden">
+            <div class="pdf-file"><div class="pdf-icon">PDF</div><div class="pdf-info"><b id="pdfName">Contrato Craft Art</b><small id="pdfMeta">Documento pronto para revisão</small></div><span class="ready">PRONTO</span></div>
+            <iframe id="pdfPreview" title="Prévia do contrato PDF"></iframe>
+            <button type="button" class="secondary-btn" id="downloadBtn">↓ Baixar PDF</button>
+          </div>
+        </section>
+        <section class="panel send-panel">
+          <div class="panel-heading"><div><span class="step">03</span><h2>Enviar ao cliente</h2><p>Confira o número antes de continuar.</p></div></div>
+          <div class="recipient"><div class="avatar">WA</div><div><small>DESTINATÁRIO</small><b id="recipientName">Aguardando dados do cliente</b><span id="recipientPhone">Número não informado</span></div></div>
+          <div class="confirm-preview">
+            <div class="confirm-title"><span class="check-badge">✓</span><b>Confirmação do documento</b></div>
+            <p>Após visualizar o PDF, o cliente poderá acessar a página de confirmação do contrato.</p>
+            <div class="confirm-button-look">✓ &nbsp; CONFIRMAR CONTRATO</div>
+            <small>Prévia ilustrativa. A confirmação online real exige publicação do site e integração com servidor.</small>
+          </div>
+          <button type="button" class="whatsapp-btn" id="whatsappBtn" disabled><span>◉</span> Abrir WhatsApp do cliente <b>↗</b></button>
+          <p class="send-note">O WhatsApp abrirá uma conversa com o número preenchido e uma mensagem pronta. Você precisará anexar o PDF baixado antes de enviar.</p>
+        </section>
+      </aside>
+    </div>
+    <footer>CRAFT ART <span>•</span> DOCUMENTOS PROFISSIONAIS <span>•</span> <span id="year"></span></footer>
+  </main>
+
+  <div class="modal-backdrop hidden" id="confirmModal">
+    <div class="modal">
+      <div class="modal-symbol">✓</div><h3>Gerar este contrato?</h3>
+      <p>Confira se os dados do cliente, o serviço e o valor estão corretos. O documento será criado em PDF para sua revisão.</p>
+      <div class="modal-actions"><button type="button" class="secondary-btn" id="cancelGenerate">Voltar e revisar</button><button type="button" class="primary-btn compact" id="confirmGenerate">Confirmar e gerar</button></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="script.js"></script>
+</body>
+</html>
